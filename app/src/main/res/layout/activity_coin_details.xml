@@ -1,0 +1,429 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".activity.CoinDetails">
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:elevation="5dp"
+                android:layout_gravity="center"
+                app:cardCornerRadius="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:padding="2dp"
+                    android:id="@+id/rank_top_show"
+                    android:text="RANK: #1"/>
+            </androidx.cardview.widget.CardView>
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="5dp"
+                android:padding="3dp"
+                android:id="@+id/coin_img"
+                android:src="@mipmap/ic_launcher"
+                tools:ignore="ImageContrastCheck" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:paddingTop="4dp"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:id="@+id/coin_symbol"
+                        android:text="BTC"
+                        />
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="$24,98,00"
+                        android:id="@+id/coin_price"
+                        android:textAlignment="viewEnd"/>
+                </LinearLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:orientation="horizontal">
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1.5"
+                        android:gravity="bottom"
+                        android:id="@+id/coin_name"
+                        android:text="BitCoin"
+                        />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="0.93%"
+                        android:gravity="end"
+                        android:id="@+id/coin_price_change"
+                        app:drawableStartCompat="@drawable/ic_down_arrow"
+                        />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/convert_chart_name"
+                        android:hint="Bitcoin to INR Chart"
+                        android:layout_marginTop="10dp"
+                        android:layout_gravity="center_horizontal"
+                        android:textSize="18sp"/>
+                <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="280dp"
+                android:layout_margin="10dp"
+                android:elevation="5dp"
+                app:cardCornerRadius="5dp">
+                        <com.github.mikephil.charting.charts.CandleStickChart
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:id="@+id/chart_view"/>
+                        <ProgressBar
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:id="@+id/load_chart"/>
+            </androidx.cardview.widget.CardView>
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10dp"
+                        android:id="@+id/view_analysis"
+                        android:elevation="5dp"
+                        app:cardCornerRadius="5dp">
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="View Analysis"
+                            android:layout_gravity="center"
+                            android:padding="5dp"
+                            android:textStyle="bold"
+                            android:textSize="16sp"/>
+
+                    </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Additional Details :"
+                        android:layout_marginTop="5dp"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
+                        android:layout_marginStart="10dp"/>
+                   <androidx.cardview.widget.CardView
+                       android:layout_width="match_parent"
+                       android:layout_height="wrap_content"
+                       android:layout_margin="10dp"
+                       android:elevation="5dp"
+                       app:cardCornerRadius="5dp">
+                       <LinearLayout
+                           android:layout_width="match_parent"
+                           android:layout_height="match_parent"
+                           android:orientation="vertical">
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Rank "/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/rank_down_show"
+                                   android:hint="#2"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="MarketCap"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/market_cap"
+                                   android:hint="1,12,65,000"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Fully Diluted Market Cap"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/diluted_market_cap"
+                                   android:hint="98,25,23,000"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Circulating Supply"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/circ_supply"
+                                   android:hint="17387738"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Total Supply"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/tot_supply"
+                                   android:hint="1234567890"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Maximum Supply"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/max_supply"
+                                   android:hint="97468798"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Ath Price"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/ath_price"
+                                   android:hint="$129"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Ath Change %"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/ath_change_percentage"
+                                   android:hint="-79%"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Ath Date"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/ath_date"
+                                   android:hint="2023-02-19"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Atl Price"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/atl_price"
+                                   android:hint="$567"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Atl Change %"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/atl_change_percentage"
+                                   android:hint="67%"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+                           <LinearLayout
+                               android:layout_width="match_parent"
+                               android:layout_height="wrap_content"
+                               android:orientation="horizontal"
+                               android:layout_marginTop="5dp"
+                               android:paddingHorizontal="10dp"
+                               android:layout_marginBottom="5dp"
+                               android:weightSum="2">
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:text="Atl Date"/>
+                               <TextView
+                                   android:layout_width="0dp"
+                                   android:layout_height="wrap_content"
+                                   android:layout_weight="1"
+                                   android:id="@+id/atl_date"
+                                   android:hint="2022-02-23"
+                                   android:textAlignment="viewEnd"/>
+
+
+                           </LinearLayout>
+
+                       </LinearLayout>
+                   </androidx.cardview.widget.CardView>
+                </LinearLayout>
+            </ScrollView>
+        </LinearLayout>
+</LinearLayout>

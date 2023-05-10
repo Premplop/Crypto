@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Crypto</string>
+    <string name="how_to_use_fibo">* If the current price breaks the resistance of any level you can long (or) buy\n* If the current price breaks the support of any level you can short (or) sell\n* But if the current price is in consolidation zone better take position after it breaks 0.786 (or) 0.888 level\n* And after taking position set target for next resistance (or) support\n* Same goes for stop loss also set in previous resistance (or) support
+    </string>
+</resources>

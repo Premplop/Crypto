@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+   <LinearLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:layout_marginHorizontal="10dp"
+       android:layout_marginTop="5dp"
+       android:paddingVertical="5dp"
+      android:orientation="horizontal">
+      <TextView
+          android:layout_width="0dp"
+          android:layout_height="wrap_content"
+          android:layout_weight="1.5"
+          android:paddingStart="10dp"
+          android:text="Crypto"
+          android:visibility="visible"
+          android:id="@+id/name"
+          android:layout_gravity="center"
+          android:textStyle="bold"
+          android:textSize="20sp"/>
+    <EditText
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+       android:layout_weight="1.5"
+        android:id="@+id/coin_search_text"
+        android:visibility="gone"
+        android:maxLines="1"
+       android:paddingStart="10dp"
+       android:hint="eg: eth"
+        android:layout_gravity="center"
+        android:textStyle="normal"
+        android:textSize="16sp"/>
+
+      <ImageView
+          android:layout_width="32dp"
+          android:layout_height="32dp"
+          android:layout_marginEnd="10dp"
+         android:src="@drawable/ic_search_coins"
+         android:id="@+id/search_coins"/>
+
+
+   </LinearLayout>
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        android:id="@+id/shimmer_layout">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+        </LinearLayout>
+    </com.facebook.shimmer.ShimmerFrameLayout>
+
+   <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       android:layout_margin="10dp"
+       android:id="@+id/refresh_down">
+
+   <androidx.recyclerview.widget.RecyclerView
+       android:layout_width="match_parent"
+       android:layout_height="match_parent"
+       tools:listitem="@layout/card_coins"
+       tools:itemCount="10"
+       android:visibility="visible"
+       android:id="@+id/rv_coins"/>
+
+   </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+</LinearLayout>
