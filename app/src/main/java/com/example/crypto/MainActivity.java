@@ -14,9 +14,11 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -43,6 +45,7 @@ import retrofit2.Response;
 public class MainActivity extends AppCompatActivity {
     CoinAdapter coinAdapter;
     ArrayList<CoinModel> coins_data = new ArrayList<>();
+    ArrayList<String> currency_list = new ArrayList<>();
     ImageView search_coins;
     TextView app_name,view_analysis;
     EditText coin_search_text;
@@ -51,6 +54,7 @@ public class MainActivity extends AppCompatActivity {
     ShimmerFrameLayout shimmerFrameLayout;
     RecyclerView rv_coins_view;
     int page = 1;
+    Spinner currency_spinner;
     ProgressBar progressBar;
     boolean isLoading = false;
 
@@ -66,6 +70,14 @@ public class MainActivity extends AppCompatActivity {
         coin_search_text = findViewById(R.id.coin_search_text);
         swipeRefreshLayout = findViewById(R.id.refresh_down);
         shimmerFrameLayout = findViewById(R.id.shimmer_layout);
+        currency_spinner = findViewById(R.id.currency_spinner);
+
+        currency_list.add("USD");
+        currency_list.add("INR");
+        ArrayAdapter<String> arrayAdapter =new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,currency_list);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        currency_spinner.setAdapter(arrayAdapter);
+
         rv_coins_view.setLayoutManager(new LinearLayoutManager(this));
         rv_coins_view.setAdapter(coinAdapter);
         rv_coins_view.setHasFixedSize(true);

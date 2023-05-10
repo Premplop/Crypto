@@ -47,6 +47,7 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
@@ -81,6 +82,8 @@ public class CoinDetails extends AppCompatActivity {
     String max_supply="";
     String name = "";
     String id = "";
+    double today_open_price = 0, today_close_price = 0;
+    double velocity_median = 0;
     ProgressBar progressBar;
     CardView view_analysis;
     LinearLayout ll_fibo,ll_gann_angle;
@@ -258,17 +261,46 @@ public class CoinDetails extends AppCompatActivity {
         ll_gann_angle = view.findViewById(R.id.ll_Gann);
         gann_ratio.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b){
-                getLowHighDataGann();
+                setGannData();
+                //getLowHighDataGann();
             }
         });
         fibo_ratio.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
-                getLowHighDataFibo();
+                //getLowHighDataFibo();
+                setFiboData();
             }
         });
         coin_name_analysis.setText(name+" Analysis");
-        getLowHighDataFibo();
+        //getLowHighDataFibo();
+        getCommonMethod();
         bottomSheetDialog.show();
+    }
+
+    private void getCommonMethod() {
+        ArrayList<Double> velocity_slope_list = new ArrayList<>();
+        //to find velocity slope
+        for (int i = 0;i < high_prices.size();i++){
+            //TODO: add if else like weekly , monthly
+            //weekly - ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(7)
+            //monthly - ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(30)
+            double velocity_slope = (high_prices.get(i)- low_prices.get(i))/high_prices.get(i);
+            velocity_slope_list.add(velocity_slope);
+        }
+
+        if (velocity_slope_list.size()%2 == 1) {
+            velocity_median = (velocity_slope_list.get(velocity_slope_list.size()/2) + velocity_slope_list.get(velocity_slope_list.size()/2 - 1))/2;
+        } else {
+            velocity_median = velocity_slope_list.get(velocity_slope_list.size()/2);
+        }
+            setFiboData();
+    }
+
+    private void setFiboData() {
+
+    }
+
+    private void setGannData() {
     }
 
     private void getLowHighDataGann() {
@@ -392,20 +424,34 @@ public class CoinDetails extends AppCompatActivity {
                         try {
                             String res = responseBody.string();
                             JSONArray jsonArray = new JSONArray(res);
+                            Calendar calendar = Calendar.getInstance();
+                            int before_year = calendar.get(Calendar.YEAR)-4;
+                            high_prices.clear();
+                            low_prices.clear();
                             candleEntries = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length();i++){
                                 JSONArray data_array = jsonArray.getJSONArray(i);
-                                Date date = new Date(data_array.getLong(0));
-                                //TODO: timestamp from api get and convert to Date Format and Validate it has 4 four year data avail else restrict analysis button
+                                Date date = new Date(jsonArray.getJSONArray(i).getLong(0));
+                                SimpleDateFormat format = new SimpleDateFormat("yyyy",Locale.getDefault());
+                                int coin_year = Integer.parseInt(format.format(date));
+                                if (coin_year > before_year) {
+                                    high_prices.add(data_array.getDouble(2));
+                                    low_prices.add(data_array.getDouble(3));
+                                }
+                                    //TODO: timestamp from api get and convert to Date Format and Validate it has 4 four year data avail else restrict analysis button
 //                                long timestamp = Long.parseLong("1508371200000"); //Example -> in ms
 //                                Date d = new Date(timestamp );
 //                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
 //                                String con_date = format.format(d);
-                                float open = (float)data_array.getDouble(1);
-                                float high = (float) data_array.getDouble(2);
-                                float low = (float)data_array.getDouble(3);
-                                float close = (float)data_array.getDouble(4);
-                                candleEntries.add(new CandleEntry(i, high, low, open, close));
+                                if (i == jsonArray.length()-1){
+                                    today_open_price = data_array.getDouble(1);
+                                    today_close_price = data_array.getDouble(4);
+                                }
+                                    float open = (float) data_array.getDouble(1);
+                                    float high = (float) data_array.getDouble(2);
+                                    float low = (float) data_array.getDouble(3);
+                                    float close = (float) data_array.getDouble(4);
+                                    candleEntries.add(new CandleEntry(i, high, low, open, close));
                             }
                             setLineChart();
                             progressBar.setVisibility(View.GONE);
