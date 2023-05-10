@@ -257,13 +257,7 @@ public class CoinDetails extends AppCompatActivity {
         ll_fibo = view.findViewById(R.id.ll_fibo);
         ll_gann_angle = view.findViewById(R.id.ll_Gann);
         gann_ratio.setOnCheckedChangeListener((compoundButton, b) -> {
-
             if (b){
-                // timestamp to Date
-                long timestamp = Long.parseLong("1508371200000"); //Example -> in ms
-                Date d = new Date(timestamp );
-                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
-                String con_date = format.format(d);
                 getLowHighDataGann();
             }
         });
@@ -381,7 +375,7 @@ public class CoinDetails extends AppCompatActivity {
             }
         });
     }
-
+//TODO: use this data for the analysis also dont take new data from server and restrict if there no four years available.
     private void getChartData(String id) {
         Map<String,Object> query_map = new HashMap<>();
         query_map.put("vs_currency","inr");
@@ -402,6 +396,11 @@ public class CoinDetails extends AppCompatActivity {
                             for (int i = 0; i < jsonArray.length();i++){
                                 JSONArray data_array = jsonArray.getJSONArray(i);
                                 Date date = new Date(data_array.getLong(0));
+                                //TODO: timestamp from api get and convert to Date Format and Validate it has 4 four year data avail else restrict analysis button
+//                                long timestamp = Long.parseLong("1508371200000"); //Example -> in ms
+//                                Date d = new Date(timestamp );
+//                                SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy",Locale.getDefault());
+//                                String con_date = format.format(d);
                                 float open = (float)data_array.getDouble(1);
                                 float high = (float) data_array.getDouble(2);
                                 float low = (float)data_array.getDouble(3);
