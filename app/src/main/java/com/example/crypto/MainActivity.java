@@ -77,8 +77,8 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> arrayAdapter =new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,currency_list);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currency_spinner.setAdapter(arrayAdapter);
-
-        rv_coins_view.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        rv_coins_view.setLayoutManager(linearLayoutManager);
         rv_coins_view.setAdapter(coinAdapter);
         rv_coins_view.setHasFixedSize(true);
 
@@ -132,7 +132,7 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         filter(editable.toString());
                     }
-                },500);
+                },200);
 
             }
         });
@@ -145,23 +145,62 @@ public class MainActivity extends AppCompatActivity {
             search_coins.setImageResource(R.drawable.ic_search_coins);
         }
 
-        rv_coins_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-                super.onScrollStateChanged(recyclerView, newState);
-                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
-
-                if (!isLoading) {
-                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == coins_data.size() - 1) {
-                        //bottom of list!
-                        getData(page+1);
-                        if (page == 5) {
-                            isLoading = true;
-                        }
-                    }
-                }
-            }
-        });
+//        rv_coins_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+//                super.onScrollStateChanged(recyclerView, newState);
+//                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+//
+//                if (!isLoading) {
+//                    if (linearLayoutManager != null && linearLayoutManager.findLastCompletelyVisibleItemPosition() == coins_data.size() - 1) {
+//                        //bottom of list!
+//                        getData(page+1);
+//                        if (page == 5) {
+//                            isLoading = true;
+//                        }
+//                    }
+//                }
+//            }
+//        });
+        // Add an OnScrollListener to the RecyclerView
+//        rv_coins_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
+//            @Override
+//            public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+//                // Check if the user is scrolling up or down
+//                if (dy > 0) {
+//                    // Get the number of visible items, total items, and past visible items
+//                    int visibleItemCount = linearLayoutManager.getChildCount();
+//                    int totalItemCount = linearLayoutManager.getItemCount();
+//                    int pastVisibleItems = linearLayoutManager.findFirstVisibleItemPosition();
+//
+//                    // Check if the last item is reached and if there is more data to load
+//                    if ((visibleItemCount + pastVisibleItems) >= totalItemCount && !isLoading && hasMoreData) {
+//                        // Set a flag to indicate that data is loading
+//                        isLoading = true;
+//
+//                        // Request more data from the server asynchronously
+//                        loadMoreData(new Callback() {
+//                            @Override
+//                            public void onSuccess(List<Item> newData) {
+//                                // Update the adapter with the new data
+//                                adapter.addData(newData);
+//
+//                                // Set the flag to false and update the hasMoreData variable
+//                                isLoading = false;
+//                                hasMoreData = newData.size() > 0;
+//                            }
+//
+//                            @Override
+//                            public void onFailure(Exception e) {
+//                                // Handle the error and set the flag to false
+//                                isLoading = false;
+//                                e.printStackTrace();
+//                            }
+//                        });
+//                    }
+//                }
+//            }
+//        });
 
     }
 
@@ -182,6 +221,7 @@ public class MainActivity extends AppCompatActivity {
             new Handler().postDelayed(() -> doubleBackToExitPressedOnce = false,2000);
             Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
         }
+        coin_search_text.setText("");
     }
     void filter(String text){
         ArrayList<CoinModel> temp = new ArrayList<>();

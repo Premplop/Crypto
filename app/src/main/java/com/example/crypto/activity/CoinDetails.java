@@ -9,11 +9,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.CompoundButton;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
+import android.widget.Spinner;
 import android.widget.TableLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -41,7 +43,6 @@ import org.json.JSONException;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -53,6 +54,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -63,6 +65,7 @@ public class CoinDetails extends AppCompatActivity {
 
     TextView rank_up,rank_down,coin_symbol,coin_name,coin_price,coin_price_change,chart_heading,coin_mark_cap,coin_dmark_up,circ_supply,coin_tot_supply,coin_max_supply,coin_ath_price,coin_ath_price_change,coin_ath_date,
             coin_atl_date,coin_atl_price,coin_atl_price_change,res1,res2,res3,res4,res5,res6,res7,res8,res9,sup1,sup2,sup3,sup4,sup5,sup6,sup7,sup8,sup9;
+    TextView gann_res1,gann_res2,gann_res3,gann_res4,gann_res5,gann_res6,gann_res7,gann_res8,gann_res9,gann_res10,gann_res11,gann_sup1,gann_sup2,gann_sup3,gann_sup4,gann_sup5,gann_sup6,gann_sup7,gann_sup8,gann_sup9,gann_sup10,gann_sup11;
     ImageView coin_img;
     DecimalFormat decimalFormat = new DecimalFormat("###.##");
     NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","IN"));
@@ -72,18 +75,22 @@ public class CoinDetails extends AppCompatActivity {
     ArrayList<CandleEntry> candleEntries;
     ArrayList<Double> high_prices = new ArrayList<>();
     ArrayList<Double> low_prices = new ArrayList<>();
+    ArrayList<String> dates = new ArrayList<>();
     BottomSheetDialog bottomSheetDialog;
-    ShimmerFrameLayout shimmer_average_move,shimmer_fibo_cardview;
-    TableLayout fibo_table_layout;
+    ShimmerFrameLayout shimmer_average_move,shimmer_fibo_cardview,shimmer_layout_cardview_gann;
+    TableLayout fibo_table_layout,gann_table_layout;
     TextView coin_name_analysis;
     TextView ava_move;
     RadioButton fibo_ratio;
     RadioButton gann_ratio;
     String max_supply="";
+    Spinner trading_spinner;
     String name = "";
     String id = "";
     double today_open_price = 0, today_close_price = 0;
+    double avrage_move = 0;
     double velocity_median = 0;
+    int trading_type;
     ProgressBar progressBar;
     CardView view_analysis;
     LinearLayout ll_fibo,ll_gann_angle;
@@ -114,6 +121,7 @@ public class CoinDetails extends AppCompatActivity {
         candleStickChart = findViewById(R.id.chart_view);
         progressBar = findViewById(R.id.load_chart);
         view_analysis = findViewById(R.id.view_analysis);
+
 
         Intent intent = getIntent();
         name = intent.getStringExtra("name");
@@ -254,38 +262,91 @@ public class CoinDetails extends AppCompatActivity {
         sup7 = view.findViewById(R.id.sup7);
         sup8 = view.findViewById(R.id.sup8);
         sup9 = view.findViewById(R.id.sup9);
+        //gann
+        gann_res1 = view.findViewById(R.id.gann_res1);
+        gann_res2 = view.findViewById(R.id.gann_res2);
+        gann_res3 = view.findViewById(R.id.gann_res3);
+        gann_res4 = view.findViewById(R.id.gann_res4);
+        gann_res5 = view.findViewById(R.id.gann_res5);
+        gann_res6 = view.findViewById(R.id.gann_res6);
+        gann_res7 = view.findViewById(R.id.gann_res7);
+        gann_res8 = view.findViewById(R.id.gann_res8);
+        gann_res9 = view.findViewById(R.id.gann_res9);
+        gann_res10 = view.findViewById(R.id.gann_res10);
+        gann_res11 = view.findViewById(R.id.gann_res11);
+        gann_sup1 = view.findViewById(R.id.gann_sup1);
+        gann_sup2 = view.findViewById(R.id.gann_sup2);
+        gann_sup3 = view.findViewById(R.id.gann_sup3);
+        gann_sup4 = view.findViewById(R.id.gann_sup4);
+        gann_sup5 = view.findViewById(R.id.gann_sup5);
+        gann_sup6 = view.findViewById(R.id.gann_sup6);
+        gann_sup7 = view.findViewById(R.id.gann_sup7);
+        gann_sup8 = view.findViewById(R.id.gann_sup8);
+        gann_sup9 = view.findViewById(R.id.gann_sup9);
+        gann_sup10 = view.findViewById(R.id.gann_sup10);
+        gann_sup11 = view.findViewById(R.id.gann_sup11);
         shimmer_average_move = view.findViewById(R.id.shimmer_layout_ava_price);
         shimmer_fibo_cardview = view.findViewById(R.id.shimmer_layout_fibo_cardview);
+        shimmer_layout_cardview_gann = view.findViewById(R.id.shimmer_layout_cardview_gann);
         fibo_table_layout = view.findViewById(R.id.fibo_table);
+        gann_table_layout = view.findViewById(R.id.gann_table);
         ll_fibo = view.findViewById(R.id.ll_fibo);
         ll_gann_angle = view.findViewById(R.id.ll_Gann);
+        trading_spinner = view.findViewById(R.id.trading_type);
+        ArrayList<String> trading_list = new ArrayList<>();
+        trading_list.add("Intra-day");
+        trading_list.add("Weekly");
+        trading_list.add("Monthly");
+        ArrayAdapter<String> arrayAdapter =new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,trading_list);
+        arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        trading_spinner.setAdapter(arrayAdapter);
+        trading_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                trading_type = i;
+                getCommonMethod(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
         gann_ratio.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b){
-                setGannData();
+                setGannData(trading_type);
                 //getLowHighDataGann();
             }
         });
         fibo_ratio.setOnCheckedChangeListener((compoundButton, b) -> {
             if (b) {
                 //getLowHighDataFibo();
-                setFiboData();
+                setFiboData(trading_type);
             }
         });
         coin_name_analysis.setText(name+" Analysis");
         //getLowHighDataFibo();
-        getCommonMethod();
+        getCommonMethod(0);
         bottomSheetDialog.show();
     }
 
-    private void getCommonMethod() {
+    private void getCommonMethod(int type) {
         ArrayList<Double> velocity_slope_list = new ArrayList<>();
         //to find velocity slope
         for (int i = 0;i < high_prices.size();i++){
             //TODO: add if else like weekly , monthly
+            if (type == 0){
+                double velocity_slope = (high_prices.get(i)- low_prices.get(i))/high_prices.get(i);
+                velocity_slope_list.add(velocity_slope);
+            }else if (type == 1){
+                double velocity_slope = ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(7);
+                velocity_slope_list.add(velocity_slope);
+            }else {
+                double velocity_slope = ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(30);
+                velocity_slope_list.add(velocity_slope);
+            }
             //weekly - ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(7)
             //monthly - ((high_prices.get(i)- low_prices.get(i))/high_prices.get(i))*Math.sqrt(30)
-            double velocity_slope = (high_prices.get(i)- low_prices.get(i))/high_prices.get(i);
-            velocity_slope_list.add(velocity_slope);
         }
 
         if (velocity_slope_list.size()%2 == 1) {
@@ -293,19 +354,163 @@ public class CoinDetails extends AppCompatActivity {
         } else {
             velocity_median = velocity_slope_list.get(velocity_slope_list.size()/2);
         }
-            setFiboData();
+        //this is for intraday if for week and month take close price of today
+        if (type == 0) {
+            avrage_move = today_open_price * velocity_median;
+        }else{
+            avrage_move = today_close_price * velocity_median;
+        }
+        if (gann_ratio.isChecked()){
+            setGannData(type);
+        }else {
+            setFiboData(type);
+        }
     }
 
-    private void setFiboData() {
+    private void setFiboData(int type) {
+        ll_fibo.setVisibility(View.VISIBLE);
+        ll_gann_angle.setVisibility(View.GONE);
+        //shimmer_average_move.setVisibility(View.VISIBLE);
+        shimmer_fibo_cardview.setVisibility(View.VISIBLE);
+        //shimmer_average_move.startShimmer();
+        shimmer_fibo_cardview.startShimmer();
+        //ava_move.setVisibility(View.GONE);
+        fibo_table_layout.setVisibility(View.GONE);
+        ArrayList<Double> fib_ratio_list = new ArrayList<>();
+        ArrayList<String> res_level_list = new ArrayList<>();
+        ArrayList<String> sup_level_list = new ArrayList<>();
+        fib_ratio_list.add(0.236);
+        fib_ratio_list.add(0.382);
+        fib_ratio_list.add(0.5);
+        fib_ratio_list.add(0.618);
+        fib_ratio_list.add(0.786);
+        fib_ratio_list.add(0.888);
+        fib_ratio_list.add(1.0);
+        fib_ratio_list.add(1.236);
+        fib_ratio_list.add(1.618);
+        for (double values : fib_ratio_list){
+            double fib_level = values * avrage_move;
+            //this is for intraday if for week and month take close price of today
+            double res_level=0;
+            double sup_level=0;
+            if (type == 0) {
+                res_level = today_open_price + fib_level;
+                sup_level = today_open_price - fib_level;
+            }else{
+                res_level = today_close_price + fib_level;
+                sup_level = today_close_price - fib_level;
+            }
+            res_level_list.add(new DecimalFormat("##.####").format(res_level));
+            sup_level_list.add(new DecimalFormat("##.####").format(sup_level));
+        }
+       // shimmer_average_move.stopShimmer();
+        shimmer_fibo_cardview.stopShimmer();
+        //shimmer_average_move.setVisibility(View.GONE);
+        shimmer_fibo_cardview.setVisibility(View.GONE);
+        fibo_table_layout.setVisibility(View.VISIBLE);
+        res1.setText(res_level_list.get(0));
+        res2.setText(res_level_list.get(1));
+        res3.setText(res_level_list.get(2));
+        res4.setText(res_level_list.get(3));
+        res5.setText(res_level_list.get(4));
+        res5.setTextColor(Color.RED);
+        res6.setTextColor(Color.RED);
+        res6.setText(res_level_list.get(5));
+        res7.setText(res_level_list.get(6));
+        res8.setText(res_level_list.get(7));
+        res9.setText(res_level_list.get(8));
 
+        sup1.setText(sup_level_list.get(0));
+        sup2.setText(sup_level_list.get(1));
+        sup3.setText(sup_level_list.get(2));
+        sup4.setText(sup_level_list.get(3));
+        sup5.setText(sup_level_list.get(4));
+        sup5.setTextColor(Color.RED);
+        sup6.setTextColor(Color.RED);
+        sup6.setText(sup_level_list.get(5));
+        sup7.setText(sup_level_list.get(6));
+        sup8.setText(sup_level_list.get(7));
+        sup9.setText(sup_level_list.get(8));
+
+        ava_move.setText("Price Movement : " + numberFormat.format(new BigDecimal(new DecimalFormat("##.##").format(avrage_move))));
     }
 
-    private void setGannData() {
+    private void setGannData(int type) {
+        ll_fibo.setVisibility(View.GONE);
+        ll_gann_angle.setVisibility(View.VISIBLE);
+
+        //shimmer_average_move.setVisibility(View.VISIBLE);
+        shimmer_layout_cardview_gann.setVisibility(View.VISIBLE);
+        //shimmer_average_move.startShimmer();
+        shimmer_layout_cardview_gann.startShimmer();
+        //ava_move.setVisibility(View.GONE);
+        gann_table_layout.setVisibility(View.GONE);
+        ArrayList<Double> gann_ratio_list = new ArrayList<>();
+        ArrayList<String> res_level_list = new ArrayList<>();
+        ArrayList<String> sup_level_list = new ArrayList<>();
+        gann_ratio_list.add(0.48);
+        gann_ratio_list.add(0.46);
+        gann_ratio_list.add(0.42);
+        gann_ratio_list.add(0.4);
+        gann_ratio_list.add(0.35);
+        gann_ratio_list.add(0.25);
+        gann_ratio_list.add(1.15);
+        gann_ratio_list.add(0.1);
+        gann_ratio_list.add(0.08);
+        gann_ratio_list.add(0.04);
+        gann_ratio_list.add(0.02);
+        for (double values : gann_ratio_list){
+            double gann_level = values * avrage_move;
+            //this is for intraday if for week and month take close price of today
+            double res_level=0;
+            double sup_level=0;
+            if (type == 0) {
+                res_level = today_open_price + gann_level;
+                sup_level = today_open_price - gann_level;
+            }else{
+                res_level = today_close_price + gann_level;
+                sup_level = today_close_price - gann_level;
+            }
+            res_level_list.add(new DecimalFormat("##.####").format(res_level));
+            sup_level_list.add(new DecimalFormat("##.####").format(sup_level));
+        }
+        // shimmer_average_move.stopShimmer();
+        shimmer_layout_cardview_gann.stopShimmer();
+        //shimmer_average_move.setVisibility(View.GONE);
+        shimmer_layout_cardview_gann.setVisibility(View.GONE);
+        gann_table_layout.setVisibility(View.VISIBLE);
+        gann_res1.setText(res_level_list.get(0));
+        gann_res2.setText(res_level_list.get(1));
+        gann_res3.setText(res_level_list.get(2));
+        gann_res4.setText(res_level_list.get(3));
+        gann_res5.setText(res_level_list.get(4));
+        gann_res6.setTextColor(Color.RED);
+        gann_res6.setText(res_level_list.get(5));
+        gann_res7.setText(res_level_list.get(6));
+        gann_res8.setText(res_level_list.get(7));
+        gann_res9.setText(res_level_list.get(8));
+        gann_res9.setTextColor(getResources().getColor(R.color.gold));
+        gann_res10.setText(res_level_list.get(9));
+        gann_res11.setText(res_level_list.get(10));
+
+        gann_sup1.setText(sup_level_list.get(0));
+        gann_sup2.setText(sup_level_list.get(1));
+        gann_sup3.setText(sup_level_list.get(2));
+        gann_sup4.setText(sup_level_list.get(3));
+        gann_sup5.setText(sup_level_list.get(4));
+        gann_sup6.setTextColor(Color.RED);
+        gann_sup6.setText(sup_level_list.get(5));
+        gann_sup7.setText(sup_level_list.get(6));
+        gann_sup8.setText(sup_level_list.get(7));
+        gann_sup9.setText(sup_level_list.get(8));
+        gann_sup9.setTextColor(getResources().getColor(R.color.gold));
+        gann_sup10.setText(sup_level_list.get(9));
+        gann_sup11.setText(sup_level_list.get(10));
+
     }
 
     private void getLowHighDataGann() {
-        ll_fibo.setVisibility(View.GONE);
-        ll_gann_angle.setVisibility(View.VISIBLE);
+
     }
 
     private void getLowHighDataFibo() {
@@ -426,15 +631,25 @@ public class CoinDetails extends AppCompatActivity {
                             JSONArray jsonArray = new JSONArray(res);
                             Calendar calendar = Calendar.getInstance();
                             int before_year = calendar.get(Calendar.YEAR)-4;
+                            Date last_date = new Date(jsonArray.getJSONArray(0).getLong(0));
+                            SimpleDateFormat simple_format = new SimpleDateFormat("yyyy",Locale.getDefault());
+                            int last_year = Integer.parseInt(simple_format.format(last_date));
+
+                            if (before_year >= last_year){
+                                view_analysis.setVisibility(View.VISIBLE);
+                            }else{
+                                view_analysis.setVisibility(View.GONE);
+                            }
                             high_prices.clear();
                             low_prices.clear();
                             candleEntries = new ArrayList<>();
                             for (int i = 0; i < jsonArray.length();i++){
                                 JSONArray data_array = jsonArray.getJSONArray(i);
                                 Date date = new Date(jsonArray.getJSONArray(i).getLong(0));
+                                dates.add(""+date);
                                 SimpleDateFormat format = new SimpleDateFormat("yyyy",Locale.getDefault());
                                 int coin_year = Integer.parseInt(format.format(date));
-                                if (coin_year > before_year) {
+                                if (coin_year >= before_year) {
                                     high_prices.add(data_array.getDouble(2));
                                     low_prices.add(data_array.getDouble(3));
                                 }

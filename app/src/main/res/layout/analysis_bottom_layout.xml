@@ -63,9 +63,40 @@
         </LinearLayout>
     </LinearLayout>
     <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginHorizontal="10dp"
+        android:weightSum="2"
+        android:paddingVertical="5dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.8"
+            android:layout_gravity="center"
+            android:text="Trading Type :"
+            android:textSize="14sp"
+            android:textStyle="bold"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.2"
+            android:orientation="horizontal">
+            <Spinner
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/trading_type"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!--    fibo layout start -->
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/ll_fibo"
+        android:visibility="gone"
         android:orientation="vertical">
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,6 +119,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:hint="Average Monthly Price Movement : $234.34"
             android:id="@+id/ava_movement"/>
         <TextView
@@ -361,18 +393,38 @@
              android:text = "@string/how_to_use_fibo"/>
      </LinearLayout>
     </LinearLayout>
+    <!-- fibo layout ends -->
+    <!-- gann layout strats -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ll_Gann"
-        android:visibility="gone"
+        android:visibility="visible"
         android:orientation="vertical">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:orientation="vertical"
-            android:layout_marginHorizontal="5dp">
+            android:layout_marginHorizontal="10dp">
+            <com.facebook.shimmer.ShimmerFrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                android:id="@+id/shimmer_layout_ava_price_gann">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/shimmer_placeholder_empty_linearlayout"/>
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:hint="Average Monthly Price Movement : $234.34"
+                android:id="@+id/ava_movement_gann"/>
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -383,29 +435,350 @@
         </LinearLayout>
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
-            android:layout_height="230dp"
+            android:layout_height="wrap_content"
             android:layout_margin="10dp"
             android:elevation="5dp"
             app:cardCornerRadius="5dp">
-            <RelativeLayout
+            <com.facebook.shimmer.ShimmerFrameLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ImageView
-                    android:layout_width="60dp"
-                    android:layout_height="60dp"
-                    android:src="@drawable/ic__lock_clock"
-                    android:id="@+id/lock"
-                    android:layout_centerInParent="true"/>
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:visibility="gone"
+                android:id="@+id/shimmer_layout_cardview_gann">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include layout="@layout/shimmer_placeholder_fibo_cardview"/>
+                </LinearLayout>
+            </com.facebook.shimmer.ShimmerFrameLayout>
+            <TableLayout android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:id="@+id/gann_table"
+                android:stretchColumns="*">
+                <TableRow >
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text="Resistance"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text="Support"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.48"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res1"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:id="@+id/gann_sup1"
+                        android:gravity="center"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.46"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res2"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:id="@+id/gann_sup2"
+                        android:gravity="center"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.42"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res3"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:id="@+id/gann_sup3"
+                        android:gravity="center"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.4"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res4"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:id="@+id/gann_sup4"
+                        android:gravity="center"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.35"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res5"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:id="@+id/gann_sup5"
+                        android:gravity="center"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.25"
+                        android:gravity="center"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:textColor="@color/red"
+                        android:textStyle="bold"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res6"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup6"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.15"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res7"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup7"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.1"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res8"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup8"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow>
+                    <TextView
+                        android:text="0.08"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:textColor="@color/gold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res9"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup9"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.04"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res10"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup10"
+                        android:layout_margin="1dip"/>
+                </TableRow>
+                <TableRow >
+                    <TextView
+                        android:text="0.02"
+                        android:gravity="center"
+                        android:textStyle="bold"
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:layout_margin="1dp"/>
+                    <TextView
+                        android:text=""
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:gravity="center"
+                        android:id="@+id/gann_res11"
+                        android:layout_margin="1dip"/>
+                    <TextView
+                        android:background="?attr/bottom_analysis_sheet"
+                        android:text=""
+                        android:gravity="center"
+                        android:id="@+id/gann_sup11"
+                        android:layout_margin="1dip"/>
+                </TableRow>
 
+            </TableLayout>
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="10dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:background="@color/red"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:textSize="14sp"
-                    android:layout_below="@+id/lock"
-                    android:textStyle="bold"
-                    android:text="Coming Soon..."/>
-            </RelativeLayout>
-        </androidx.cardview.widget.CardView>
+                    android:layout_marginStart="5dp"
+                    android:text="- Indicate most important resistance or support."/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:orientation="horizontal">
+                <View
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_gravity="center"
+                    android:background="@color/gold"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:text="- Indicate Buy entry / Sell entry price"/>
+            </LinearLayout>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="How to use?"
+                android:layout_marginTop="10dp"
+                android:textStyle="bold"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginBottom="10dp"
+                android:text = "@string/how_to_use_gann"/>
+        </LinearLayout>
+<!--        <androidx.cardview.widget.CardView-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="230dp"-->
+<!--            android:layout_margin="10dp"-->
+<!--            android:elevation="5dp"-->
+<!--            app:cardCornerRadius="5dp">-->
+<!--            <RelativeLayout-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="match_parent">-->
+<!--                <ImageView-->
+<!--                    android:layout_width="60dp"-->
+<!--                    android:layout_height="60dp"-->
+<!--                    android:src="@drawable/ic__lock_clock"-->
+<!--                    android:id="@+id/lock"-->
+<!--                    android:layout_centerInParent="true"/>-->
+
+<!--                <TextView-->
+<!--                    android:layout_width="wrap_content"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_centerHorizontal="true"-->
+<!--                    android:textSize="14sp"-->
+<!--                    android:layout_below="@+id/lock"-->
+<!--                    android:textStyle="bold"-->
+<!--                    android:text="Coming Soon..."/>-->
+<!--            </RelativeLayout>-->
+<!--        </androidx.cardview.widget.CardView>-->
+
+
     </LinearLayout>
+    <!-- gann layout ends -->
 </LinearLayout>

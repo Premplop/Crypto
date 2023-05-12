@@ -12,4 +12,5 @@
     <color name="light_grey">#f2f2f2</color>
     <color name="drak_grey">#333333</color>
     <color name="shimmer_placeholder">#dddddd</color>
+    <color name="gold">#FF9800</color>
 </resources>
