@@ -1,5 +1,7 @@
 package com.example.crypto;
 
+import static com.example.crypto.Constant.Rupee_Symbol;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -14,6 +16,7 @@ import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -24,6 +27,7 @@ import android.widget.Toast;
 
 import com.example.crypto.Adapter.CoinAdapter;
 import com.example.crypto.Model.CoinModel;
+import com.example.crypto.SqliteHelper.SqliteHelper;
 import com.facebook.shimmer.ShimmerFrameLayout;
 
 
@@ -33,6 +37,7 @@ import org.json.JSONException;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -55,7 +60,9 @@ public class MainActivity extends AppCompatActivity {
     RecyclerView rv_coins_view;
     int page = 1;
     Spinner currency_spinner;
+    String currency_selected = "";
     ProgressBar progressBar;
+    SqliteHelper db;
     boolean isLoading = false;
 
     @Override
@@ -72,8 +79,8 @@ public class MainActivity extends AppCompatActivity {
         shimmerFrameLayout = findViewById(R.id.shimmer_layout);
         currency_spinner = findViewById(R.id.currency_spinner);
 
-        currency_list.add("USD");
-        currency_list.add("INR");
+        currency_list.add(Rupee_Symbol+" INR");
+        currency_list.add("$ USD");
         ArrayAdapter<String> arrayAdapter =new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item,currency_list);
         arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         currency_spinner.setAdapter(arrayAdapter);
@@ -81,7 +88,9 @@ public class MainActivity extends AppCompatActivity {
         rv_coins_view.setLayoutManager(linearLayoutManager);
         rv_coins_view.setAdapter(coinAdapter);
         rv_coins_view.setHasFixedSize(true);
+        db = new SqliteHelper(this);
 
+        getcurrencystored();
         getData(page);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
@@ -114,7 +123,19 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+        currency_spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
 
+                String [] split_currency = currency_list.get(i).split(" ");
+                currency_selected =split_currency[1].toLowerCase(Locale.ROOT);
+                db.addCurrencyType(currency_selected);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+                //do something
+            }
+        });
         coin_search_text.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -144,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             search_coins.setImageResource(R.drawable.ic_search_coins);
         }
+
 
 //        rv_coins_view.addOnScrollListener(new RecyclerView.OnScrollListener() {
 //            @Override
@@ -202,6 +224,15 @@ public class MainActivity extends AppCompatActivity {
 //            }
 //        });
 
+    }
+
+    private void getcurrencystored() {
+        currency_selected = db.getCurrencydata();
+        if (currency_selected.equals("inr")) {
+            currency_spinner.setSelection(0);
+        }else{
+            currency_spinner.setSelection(1);
+        }
     }
 
 
@@ -283,7 +314,7 @@ public class MainActivity extends AppCompatActivity {
                                 coins_data.add(coinModel);
                             }
                             coinAdapter.notifyDataSetChanged();
-
+                            db.addCoinsData(coins_data);
                                 shimmerFrameLayout.stopShimmer();
                                 shimmerFrameLayout.setVisibility(View.GONE);
                                 rv_coins_view.setVisibility(View.VISIBLE);

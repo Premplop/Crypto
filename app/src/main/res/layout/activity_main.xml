@@ -73,6 +73,12 @@
             <include layout="@layout/shimmer_placeholder" />
             <include layout="@layout/shimmer_placeholder" />
             <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
+            <include layout="@layout/shimmer_placeholder" />
         </LinearLayout>
     </com.facebook.shimmer.ShimmerFrameLayout>
 
