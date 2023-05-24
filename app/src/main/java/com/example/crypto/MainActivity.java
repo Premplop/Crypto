@@ -1,6 +1,7 @@
 package com.example.crypto;
 
 import static com.example.crypto.Constant.Rupee_Symbol;
+import static com.example.crypto.Constant.currency_symbol;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -91,7 +92,7 @@ public class MainActivity extends AppCompatActivity {
         db = new SqliteHelper(this);
 
         getcurrencystored();
-        getData(page);
+       // getData(page);
 
         swipeRefreshLayout.setOnRefreshListener(() -> {
             coins_data.clear();
@@ -129,7 +130,9 @@ public class MainActivity extends AppCompatActivity {
 
                 String [] split_currency = currency_list.get(i).split(" ");
                 currency_selected =split_currency[1].toLowerCase(Locale.ROOT);
+                currency_symbol = currency_selected;
                 db.addCurrencyType(currency_selected);
+                getData(1);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
@@ -270,9 +273,10 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData(int page){
         Map<String,Object> params = new HashMap<>();
-        params.put("vs_currency","inr");
+        String vs_currency = db.getCurrencydata();
+        params.put("vs_currency",vs_currency);
         params.put("page",page);
-        params.put("per_page",100);
+        params.put("per_page",250);
         params.put("order","market_cap_desc");
         API apiClient =ApiClient.getclient().create(API.class);
         Call<ResponseBody> data = apiClient.getCoinMarket(params);
@@ -281,7 +285,7 @@ public class MainActivity extends AppCompatActivity {
             shimmerFrameLayout.setVisibility(View.VISIBLE);
             rv_coins_view.setVisibility(View.GONE);
         }
-
+        coins_data.clear();
         data.enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(@NonNull Call<ResponseBody> call, @NonNull Response<ResponseBody> response) {

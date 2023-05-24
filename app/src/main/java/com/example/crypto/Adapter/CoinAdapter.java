@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.example.crypto.Constant;
 import com.example.crypto.Interface.OnLoadMoreListener;
 import com.example.crypto.Model.CoinModel;
 import com.example.crypto.R;
@@ -38,7 +39,6 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.ViewHolder>{
     double changes;
     private final int VIEW_TYPE_ITEM = 0;
     private final int VIEW_TYPE_LOADING = 1;
-    java.text.NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","IN"));
 
     private OnLoadMoreListener onLoadMoreListener;
     public void setOnLoadMoreListener(OnLoadMoreListener mOnLoadMoreListener) {
@@ -59,6 +59,12 @@ public class CoinAdapter extends RecyclerView.Adapter<CoinAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        NumberFormat numberFormat;
+        if (Constant.currency_symbol.equals("inr")) {
+            numberFormat = NumberFormat.getCurrencyInstance(new Locale("en", "IN"));
+        }else{
+            numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","US"));
+        }
         numberFormat.setMaximumFractionDigits(20);
         holder.coin_name.setText(coins_list.get(position).getCoin_name());
         holder.coin_price.setText(numberFormat.format(new BigDecimal(coins_list.get(position).getCoin_price()).doubleValue()));

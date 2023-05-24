@@ -23,6 +23,7 @@ import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.example.crypto.API;
 import com.example.crypto.ApiClient;
+import com.example.crypto.Constant;
 import com.example.crypto.R;
 import com.facebook.shimmer.ShimmerFrameLayout;
 import com.github.mikephil.charting.charts.CandleStickChart;
@@ -68,7 +69,6 @@ public class CoinDetails extends AppCompatActivity {
     TextView gann_res1,gann_res2,gann_res3,gann_res4,gann_res5,gann_res6,gann_res7,gann_res8,gann_res9,gann_res10,gann_res11,gann_sup1,gann_sup2,gann_sup3,gann_sup4,gann_sup5,gann_sup6,gann_sup7,gann_sup8,gann_sup9,gann_sup10,gann_sup11;
     ImageView coin_img;
     DecimalFormat decimalFormat = new DecimalFormat("###.##");
-    NumberFormat numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","IN"));
     Locale us = new Locale("en");
     SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", us);
     CandleStickChart candleStickChart;
@@ -94,6 +94,7 @@ public class CoinDetails extends AppCompatActivity {
     ProgressBar progressBar;
     CardView view_analysis;
     LinearLayout ll_fibo,ll_gann_angle;
+    NumberFormat numberFormat;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -144,6 +145,11 @@ public class CoinDetails extends AppCompatActivity {
         String atl_percentage = intent.getStringExtra("atl_percentage");
         String atl_date= intent.getStringExtra("atl_date");
 
+        if (Constant.currency_symbol.equals("inr")){
+            numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","IN"));
+        }else{
+            numberFormat = NumberFormat.getCurrencyInstance(new Locale("en","US"));
+        }
         numberFormat.setMaximumFractionDigits(20);
         rank_up.setText("Rank: #"+rank);
         rank_down.setText("#"+rank);
@@ -615,7 +621,7 @@ public class CoinDetails extends AppCompatActivity {
 //TODO: use this data for the analysis also dont take new data from server and restrict if there no four years available.
     private void getChartData(String id) {
         Map<String,Object> query_map = new HashMap<>();
-        query_map.put("vs_currency","inr");
+        query_map.put("vs_currency", Constant.currency_symbol);
         query_map.put("days","max");
         progressBar.setVisibility(View.VISIBLE);
         candleStickChart.setVisibility(View.GONE);
